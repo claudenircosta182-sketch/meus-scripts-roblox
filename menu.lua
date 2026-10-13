@@ -1,33 +1,41 @@
--- [[ MENU MAQUIAVÉLICO - ADVANCED SPAM & ESP ]] --
+-- [[ MENU MAQUIAVÉLICO - VERSÃO ULTRA COMPATÍVEL ]] --
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local TextChatService = game:GetService("TextChatService")
 local LocalPlayer = Players.LocalPlayer
 
--- Segurança para o executor: Remove instâncias antigas do menu se você reinjetar
+-- Segurança: Deleta o menu anterior se já existir
 if CoreGui:FindFirstChild("MenuMaquiavelicoGui") then
     CoreGui.MenuMaquiavelicoGui:Destroy()
 end
 
--- Variáveis de Controle de Estado
+-- Avisar no chat local que o script injetou com sucesso
+game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
+    Text = "[MENU MAQUIAVÉLICO]: Injetado com sucesso! Clique em 'W' para abrir/fechar.";
+    Color = Color3.fromRGB(255, 0, 0);
+    Font = Enum.Font.SourceSansBold;
+})
+
+-- Variáveis de Controle
 local menuAberto = true
 local espAtivo = false
 local conexaoEsp = nil
 
--- Configuração do Canal de Chat (Compatível com o novo sistema de Chat do Roblox)
-local chatChannel = nil
-if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-    chatChannel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-end
-
--- Função Auxiliar para Enviar Mensagem Instantaneamente
+-- Função Universal de Chat (Funciona em QUALQUER executor e chat antigo/novo)
 local function enviarChat(mensagem)
-    if chatChannel then
-        chatChannel:SendAsync(mensagem)
+    local sayMessage = game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents") 
+        and game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
+    
+    if sayMessage then
+        sayMessage:FireServer(mensagem, "All")
     else
-        -- Fallback para executores em servidores com chat antigo
-        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(mensagem, "All")
+        -- Novo sistema de chat do Roblox
+        pcall(function()
+            local tcs = game:GetService("TextChatService")
+            if tcs and tcs.ChatVersion == Enum.ChatVersion.TextChatService then
+                local channel = tcs.TextChannels:FindFirstChild("RBXGeneral")
+                if channel then channel:SendAsync(mensagem) end
+            end
+        end)
     end
 end
 
@@ -37,220 +45,235 @@ ScreenGui.Name = "MenuMaquiavelicoGui"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = CoreGui
 
--- Botão Flutuante "W" para Abrir/Fechar
+-- Botão Flutuante "W"
 local BotaoAlternar = Instance.new("TextButton")
 BotaoAlternar.Name = "BotaoW"
-BotaoAlternar.Size = UDim2.new(0, 40, 0, 40)
+BotaoAlternar.Size = UDim2.new(0, 45, 0, 45)
 BotaoAlternar.Position = UDim2.new(1, -260, 0.4, 0)
 BotaoAlternar.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 BotaoAlternar.Text = "W"
 BotaoAlternar.TextColor3 = Color3.fromRGB(255, 255, 255)
 BotaoAlternar.Font = Enum.Font.SourceSansBold
 BotaoAlternar.TextSize = 24
+BotaoAlternar.Active = true
+BotaoAlternar.Draggable = true -- Você pode arrastar o botão W se quiser
 BotaoAlternar.Parent = ScreenGui
 
 local UICornerW = Instance.new("UICorner")
 UICornerW.CornerRadius = UDim.new(0, 8)
 UICornerW.Parent = BotaoAlternar
 
--- Janela Principal (Retângulo Compacto Vertical no Lado Direito)
+-- Janela Principal (Compacta no Lado Direito)
 local FrameMenu = Instance.new("Frame")
 FrameMenu.Name = "JanelaPrincipal"
-FrameMenu.Size = UDim2.new(0, 200, 0, 480)
-FrameMenu.Position = UDim2.new(1, -210, 0.2, 0)
-FrameMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Base para o Gradiente
+FrameMenu.Size = UDim2.new(0, 190, 0, 450)
+FrameMenu.Position = UDim2.new(1, -205, 0.2, 0)
+FrameMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 FrameMenu.Visible = true
+FrameMenu.Active = true
+FrameMenu.Draggable = true
 FrameMenu.Parent = ScreenGui
 
--- Tornar a Janela Arrastável (Draggable)
-FrameMenu.Active = true
-FrameMenu.Selectable = true
-FrameMenu.Draggable = true
-
--- Efeito Gradiente Preto e Branco Maquiavélico
+-- Gradiente Preto e Branco
 local UIGradient = Instance.new("UIGradient")
 UIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),       -- Topo Preto
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))  -- Base Branca
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
 })
-UIGradient.Rotation = 90 -- Vertical (Cabeça para baixo)
+UIGradient.Rotation = 90
 UIGradient.Parent = FrameMenu
 
 local UICornerMenu = Instance.new("UICorner")
 UICornerMenu.CornerRadius = UDim.new(0, 10)
 UICornerMenu.Parent = FrameMenu
 
--- Título do Menu
+-- Título
 local LabelTitulo = Instance.new("TextLabel")
 LabelTitulo.Size = UDim2.new(1, 0, 0, 30)
 LabelTitulo.BackgroundTransparency = 1
 LabelTitulo.Text = "Menu Maquiavélico"
-LabelTitulo.TextColor3 = Color3.fromRGB(255, 0, 0) -- Vermelho Sangue para Destaque
+LabelTitulo.TextColor3 = Color3.fromRGB(255, 0, 0)
 LabelTitulo.Font = Enum.Font.SourceSansBold
-LabelTitulo.TextSize = 18
+LabelTitulo.TextSize = 16
 LabelTitulo.Parent = FrameMenu
 
--- Container com Scroll para os Botões (Mantém o design compacto e pequeno)
+-- Rolagem (Scrolling)
 local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -10, 1, -40)
 ScrollContainer.Position = UDim2.new(0, 5, 0, 35)
 ScrollContainer.BackgroundTransparency = 1
-ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 680) -- Altura interna regulável
-ScrollContainer.ScrollBarThickness = 4
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 720)
+ScrollContainer.ScrollBarThickness = 3
 ScrollContainer.Parent = FrameMenu
 
 local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 5)
+UIListLayout.Padding = UDim.new(0, 4)
 UIListLayout.Parent = ScrollContainer
 
--- Função para Gerar Botões Padronizados Estilo Dark
-local function criarBotao(texto, layoutOrder, cliqueCallback)
+-- Criador de botões limpo
+local function criarBotao(texto, ordem, callback)
     local Botao = Instance.new("TextButton")
-    Botao.Size = UDim2.new(1, -10, 0, 30)
-    Botao.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Botao.Size = UDim2.new(1, -6, 0, 28)
+    Botao.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     Botao.Text = texto
-    Botao.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Botao.TextColor3 = Color3.fromRGB(255, 255, 255)
     Botao.Font = Enum.Font.SourceSans
-    Botao.TextSize = 14
-    Botao.LayoutOrder = layoutOrder
+    Botao.TextSize = 13
+    Botao.LayoutOrder = ordem
     Botao.Parent = ScrollContainer
     
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 5)
+    Corner.CornerRadius = UDim.new(0, 4)
     Corner.Parent = Botao
     
-    Botao.MouseButton1Click:Connect(cliqueCallback)
+    Botao.MouseButton1Click:Connect(callback)
     return Botao
 end
 
--- [[ LÓGICA DO BOTÃO "W" (JANELA FLUTUANTE) ]] --
+-- Lógica de abrir/fechar
 BotaoAlternar.MouseButton1Click:Connect(function()
     menuAberto = not menuAberto
     FrameMenu.Visible = menuAberto
 end)
 
--- [[ SEÇÃO: COMANDOS SPAM INDIVIDUAIS ]] --
+-- [[ SPAMS INDIVIDUAIS ]] --
 local listaSpam = {
-    { text = "Spam: Tiro na Cabeça 🩸", msg = "/ . Tiro Na cabeça 🩸" },
-    { text = "Spam: Render 🩸",       msg = "/ . Render 🩸" },
-    { text = "Spam: Soco",            msg = "/ . soco" },
-    { text = "Spam: Jab",             msg = "/ . Jab" },
-    { text = "Spam: Chute",            msg = "/ . Chute" },
-    { text = "Spam: Kit Carro",        msg = "/ . Kit Carro" },
-    { text = "Spam: Kit Médico",       msg = "/ . Kit médico" },
-    { text = "Spam: Cortar Com.",      msg = "/ . Cortar comunicação" },
-    { text = "Spam: Acender",          msg = "/ . Acender" },
-    { text = "Spam: Tragar",           msg = "/ . Tragar" },
-    { text = "Spam: Tiro Cabeça / PD", msg = "/ . Tiro na cabeça 🩸 / PD" }
+    { t = "Tiro na Cabeça 🩸", m = "/ . Tiro Na cabeça 🩸" },
+    { t = "Render 🩸",       m = "/ . Render 🩸" },
+    { t = "Soco",            m = "/ . soco" },
+    { t = "Jab",             m = "/ . Jab" },
+    { t = "Chute",            m = "/ . Chute" },
+    { t = "Kit Carro",        m = "/ . Kit Carro" },
+    { t = "Kit Médico",       m = "/ . Kit médico" },
+    { t = "Cortar Com.",      m = "/ . Cortar comunicação" },
+    { t = "Acender",          m = "/ . Acender" },
+    { t = "Tragar",           m = "/ . Tragar" },
+    { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" }
 }
 
-for i, dados in ipairs(listaSpam) do
-    criarBotao(dados.text, i, function()
-        enviarChat(dados.msg)
-    end)
+for i, v in ipairs(listaSpam) do
+    criarBotao(v.t, i, function() enviarChat(v.m) end)
 end
 
--- Separador Visual de Seção
-local LabelSeparador1 = Instance.new("TextLabel")
-LabelSeparador1.Size = UDim2.new(1, -10, 0, 20)
-LabelSeparador1.BackgroundTransparency = 1
-LabelSeparador1.Text = "-- MÚLTIPLOS 3X --"
-LabelSeparador1.TextColor3 = Color3.fromRGB(0, 0, 0)
-LabelSeparador1.Font = Enum.Font.SourceSansBold
-LabelSeparador1.TextSize = 12
-LabelSeparador1.LayoutOrder = 50
-LabelSeparador1.Parent = ScrollContainer
+-- Separador 1
+local Sep1 = Instance.new("TextLabel")
+Sep1.Size = UDim2.new(1, 0, 0, 20)
+Sep1.BackgroundTransparency = 1
+Sep1.Text = "-- MÚLTIPLOS 3X --"
+Sep1.TextColor3 = Color3.fromRGB(0, 0, 0)
+Sep1.Font = Enum.Font.SourceSansBold
+Sep1.TextSize = 11
+Sep1.LayoutOrder = 50
+Sep1.Parent = ScrollContainer
 
--- [[ SEÇÃO: SPAM 3X RÁPIDO ]] --
-local listaSpam3x = {
-    { text = "3X: Tiro na Cabeça 🩸", msg = "/ .  Tiro na cabeça 🩸" },
-    { text = "3X: Render 🩸",       msg = "/ . Render 🩸" },
-    { text = "3X: Jab",             msg = "/ . Jab" },
-    { text = "3X: Chute",            msg = "/ . Chute" }
+-- [[ SPAMS 3X ]] --
+local lista3x = {
+    { t = "3X: Tiro Cabeça 🩸", m = "/ .  Tiro na cabeça 🩸" },
+    { t = "3X: Render 🩸",       m = "/ . Render 🩸" },
+    { t = "3X: Jab",             m = "/ . Jab" },
+    { t = "3X: Chute",            m = "/ . Chute" }
 }
 
-for i, dados in ipairs(listaSpam3x) do
-    criarBotao(dados.text, 50 + i, function()
+for i, v in ipairs(lista3x) do
+    criarBotao(v.t, 50 + i, function()
         for _ = 1, 3 do
-            enviarChat(dados.msg)
-            task.wait(0.05) -- Intervalo milimétrico seguro para o chat aceitar e não ignorar
+            enviarChat(v.m)
+            task.wait(0.08)
         end
     end)
 end
 
--- Separador Visual de Seção
-local LabelSeparador2 = Instance.new("TextLabel")
-LabelSeparador2.Size = UDim2.new(1, -10, 0, 20)
-LabelSeparador2.BackgroundTransparency = 1
-LabelSeparador2.Text = "-- VISUAL --"
-LabelSeparador2.TextColor3 = Color3.fromRGB(0, 0, 0)
-LabelSeparador2.Font = Enum.Font.SourceSansBold
-LabelSeparador2.TextSize = 12
-LabelSeparador2.LayoutOrder = 100
-LabelSeparador2.Parent = ScrollContainer
+-- Separador 2
+local Sep2 = Instance.new("TextLabel")
+Sep2.Size = UDim2.new(1, 0, 0, 20)
+Sep2.BackgroundTransparency = 1
+Sep2.Text = "-- VISUAL --"
+Sep2.TextColor3 = Color3.fromRGB(0, 0, 0)
+Sep2.Font = Enum.Font.SourceSansBold
+Sep2.TextSize = 11
+Sep2.LayoutOrder = 100
+Sep2.Parent = ScrollContainer
 
--- [[ SEÇÃO: SISTEMA DE ESP AVANÇADO ]] --
+-- [[ SISTEMA ESP COM HIGHLIGHT ULTRA LEVE ]] --
 local BotaoEsp = criarBotao("ESP: OFF", 101, function() end)
-BotaoEsp.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
 
--- Limpeza de elementos de ESP antigos do jogador
-local function removerEspJogador(player)
-    if player.Character then
-        local cham = player.Character:FindFirstChild("EspChamsMaquiavelico")
-        if cham then cham:Destroy() end
-        
-        local head = player.Character:FindFirstChild("Head")
+local function limparEsp(p)
+    if p.Character then
+        local h = p.Character:FindFirstChild("MaquiavelHighlight")
+        if h then h:Destroy() end
+        local head = p.Character:FindFirstChild("Head")
         if head then
-            local tag = head:FindFirstChild("EspTagMaquiavelica")
-            if tag then tag:Destroy() end
+            local b = head:FindFirstChild("MaquiavelBB")
+            if b then b:Destroy() end
         end
     end
 end
 
--- Adiciona os efeitos visuais nos alvos
-local function aplicarEspJogador(player)
-    if player == LocalPlayer then return end
+local function darEsp(p)
+    if p == LocalPlayer or not p.Character then return end
+    local char = p.Character
     
-    local function criarElementos()
-        local char = player.Character
-        if not char then return end
+    -- Outline Vermelho estilo esqueleto pelas paredes
+    if not char:FindFirstChild("MaquiavelHighlight") then
+        local hl = Instance.new("Highlight")
+        hl.Name = "MaquiavelHighlight"
+        hl.FillColor = Color3.fromRGB(0,0,0)
+        hl.FillTransparency = 1 -- Foca apenas no traçado das linhas do corpo
+        hl.OutlineColor = Color3.fromRGB(255, 0, 0)
+        hl.OutlineTransparency = 0
+        hl.Adornee = char
+        hl.Parent = char
+    end
+    
+    -- Nome e Distância Fina
+    local head = char:WaitForChild("Head", 2)
+    if head and not head:FindFirstChild("MaquiavelBB") then
+        local bb = Instance.new("BillboardGui")
+        bb.Name = "MaquiavelBB"
+        bb.AlwaysOnTop = true
+        bb.Size = UDim2.new(0, 150, 0, 40)
+        bb.StudsOffset = Vector3.new(0, 2, 0)
+        bb.Adornee = head
         
-        -- Efeito de silhueta vermelha estilo palito/esqueleto destacado pelas bordas
-        if not char:FindFirstChild("EspChamsMaquiavelico") then
-            local Chams = Instance.new("Highlight")
-            Chams.Name = "EspChamsMaquiavelico"
-            Chams.FillColor = Color3.fromRGB(0, 0, 0)
-            Chams.FillTransparency = 0.85 -- Transparência interna quase invisível
-            Chams.OutlineColor = Color3.fromRGB(255, 0, 0) -- Tracing de silhueta vermelho fino
-            Chams.OutlineTransparency = 0 -- 100% Visível pelas paredes
-            Chams.Adornee = char
-            Chams.Parent = char
-        end
+        local txt = Instance.new("TextLabel")
+        txt.Size = UDim2.new(1, 0, 1, 0)
+        txt.BackgroundTransparency = 1
+        txt.Text = p.Name .. " [Calculando...]"
+        txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+        txt.Font = Enum.Font.SourceSansLight
+        txt.TextSize = 12
+        txt.Parent = bb
+        bb.Parent = head
         
-        -- Nome e distância em fonte fina
-        local head = char:WaitForChild("Head", 3)
-        if head and not head:FindFirstChild("EspTagMaquiavelica") then
-            local BillboardGui = Instance.new("BillboardGui")
-            BillboardGui.Name = "EspTagMaquiavelica"
-            BillboardGui.AlwaysOnTop = true
-            BillboardGui.Size = UDim2.new(0, 200, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 2.5, 0)
-            BillboardGui.Adornee = head
-            
-            local TextLabel = Instance.new("TextLabel")
-            TextLabel.Size = UDim2.new(1, 0, 1, 0)
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Text = player.Name .. " [0m]"
-            TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            TextLabel.TextStrokeTransparency = 0.5
-            TextLabel.Font = Enum.Font.SourceSansLight -- Letra Fina conforme pedido
-            TextLabel.TextSize = 14
-            TextLabel.Parent = BillboardGui
-            
-            BillboardGui.Parent = head
-            
-            -- Loop interno de atualização de metros em tempo real
-            task.spawn(function()
-                while espAtivo and char and head and BillboardGui:IsDescendantOf(game) do
-                
+        task.spawn(function()
+            while espAtivo and char and head and bb:IsDescendantOf(game) do
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and char:FindFirstChild("HumanoidRootPart") then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
+                    txt.Text = string.format("%s\n[%d Metros]", p.Name, math.floor(dist))
+                end
+                task.wait(0.3)
+            end
+        end)
+    end
+end
+
+BotaoEsp.MouseButton1Click:Connect(function()
+    espAtivo = not espAtivo
+    if espAtivo then
+        BotaoEsp.Text = "ESP: ONLINE"
+        BotaoEsp.BackgroundColor3 = Color3.fromRGB(0, 140, 0)
+        for _, p in ipairs(Players:GetPlayers()) do darEsp(p) end
+        conexaoEsp = Players.PlayerAdded:Connect(function(p)
+            p.CharacterAdded:Connect(function()
+                if espAtivo then task.wait(0.5) darEsp(p) end
+            end)
+        end)
+    else
+        BotaoEsp.Text = "ESP: OFF"
+        BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+        if conexaoEsp then conexaoEsp:Disconnect() conexaoEsp = nil end
+        for _, p in ipairs(Players:GetPlayers()) do limparEsp(p) end
+    end
+end)
