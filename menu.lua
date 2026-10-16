@@ -102,7 +102,7 @@ local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -10, 1, -40)
 ScrollContainer.Position = UDim2.new(0, 5, 0, 35)
 ScrollContainer.BackgroundTransparency = 1
-ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 720)
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 780) -- Aumentado levemente para caber os dois novos botões 3x
 ScrollContainer.ScrollBarThickness = 3
 ScrollContainer.Parent = FrameMenu
 
@@ -172,7 +172,9 @@ local lista3x = {
     { t = "3X: Tiro Cabeça 🩸", m = "/ .  Tiro na cabeça 🩸" },
     { t = "3X: Render 🩸",       m = "/ . Render 🩸" },
     { t = "3X: Jab",             m = "/ . Jab" },
-    { t = "3X: Chute",            m = "/ . Chute" }
+    { t = "3X: Chute",            m = "/ . Chute" },
+    { t = "3X: Furar pneu",       m = "/ . Furar pneu" },        -- [ADICIONADO]
+    { t = "3X: Rajar Heli",       m = "/ . Rajar Helicóptero" }  -- [ADICIONADO]
 }
 
 for i, v in ipairs(lista3x) do
