@@ -102,7 +102,7 @@ local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -10, 1, -40)
 ScrollContainer.Position = UDim2.new(0, 5, 0, 35)
 ScrollContainer.BackgroundTransparency = 1
-ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 780) -- Aumentado levemente para caber os dois novos botões 3x
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 810) -- Aumentado para acomodar o novo botão sem cortar
 ScrollContainer.ScrollBarThickness = 3
 ScrollContainer.Parent = FrameMenu
 
@@ -146,7 +146,7 @@ local listaSpam = {
     { t = "Chute",            m = "/ . Chute" },
     { t = "Kit Carro",        m = "/ . Kit Carro" },
     { t = "Kit Médico",       m = "/ . Kit médico" },
-    { t = "Cortar Com.",      m = "/ . Cortar comunicação" },
+    { t = "Cortar Com.",      m = "/ . Cortar communication" },
     { t = "Acender",          m = "/ . Acender" },
     { t = "Tragar",           m = "/ . Tragar" },
     { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" }
@@ -173,8 +173,9 @@ local lista3x = {
     { t = "3X: Render 🩸",       m = "/ . Render 🩸" },
     { t = "3X: Jab",             m = "/ . Jab" },
     { t = "3X: Chute",            m = "/ . Chute" },
-    { t = "3X: Furar pneu",       m = "/ . Furar pneu" },        -- [ADICIONADO]
-    { t = "3X: Rajar Heli",       m = "/ . Rajar Helicóptero" }  -- [ADICIONADO]
+    { t = "3X: Furar pneu",       m = "/ . Furar pneu" },
+    { t = "3X: Rajar Heli",       m = "/ . Rajar Helicóptero" },
+    { t = "3X: .50 DE",           m = ":/  . TIRO NA CABEÇA 🩸/ .50 DESERT EAGLE" } -- [ADICIONADO CONFORME PEDIDO]
 }
 
 for i, v in ipairs(lista3x) do
