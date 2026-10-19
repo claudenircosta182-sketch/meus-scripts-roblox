@@ -56,14 +56,14 @@ BotaoAlternar.TextColor3 = Color3.fromRGB(255, 255, 255)
 BotaoAlternar.Font = Enum.Font.SourceSansBold
 BotaoAlternar.TextSize = 24
 BotaoAlternar.Active = true
-BotaoAlternar.Draggable = true -- Você pode arrastar o botão W se quiser
+BotaoAlternar.Draggable = true
 BotaoAlternar.Parent = ScreenGui
 
 local UICornerW = Instance.new("UICorner")
 UICornerW.CornerRadius = UDim.new(0, 8)
 UICornerW.Parent = BotaoAlternar
 
--- Janela Principal (Compacta no Lado Direito)
+-- Janela Principal
 local FrameMenu = Instance.new("Frame")
 FrameMenu.Name = "JanelaPrincipal"
 FrameMenu.Size = UDim2.new(0, 190, 0, 450)
@@ -74,7 +74,6 @@ FrameMenu.Active = true
 FrameMenu.Draggable = true
 FrameMenu.Parent = ScreenGui
 
--- Gradiente Preto e Branco
 local UIGradient = Instance.new("UIGradient")
 UIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
@@ -87,7 +86,6 @@ local UICornerMenu = Instance.new("UICorner")
 UICornerMenu.CornerRadius = UDim.new(0, 10)
 UICornerMenu.Parent = FrameMenu
 
--- Título
 local LabelTitulo = Instance.new("TextLabel")
 LabelTitulo.Size = UDim2.new(1, 0, 0, 30)
 LabelTitulo.BackgroundTransparency = 1
@@ -97,12 +95,12 @@ LabelTitulo.Font = Enum.Font.SourceSansBold
 LabelTitulo.TextSize = 16
 LabelTitulo.Parent = FrameMenu
 
--- Rolagem (Scrolling)
+-- Rolagem
 local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -10, 1, -40)
 ScrollContainer.Position = UDim2.new(0, 5, 0, 35)
 ScrollContainer.BackgroundTransparency = 1
-ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 840) -- Ajustado dinamicamente para comportar o novo botão sem esconder itens
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 840)
 ScrollContainer.ScrollBarThickness = 3
 ScrollContainer.Parent = FrameMenu
 
@@ -111,7 +109,6 @@ UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 4)
 UIListLayout.Parent = ScrollContainer
 
--- Criador de botões limpo
 local function criarBotao(texto, ordem, callback)
     local Botao = Instance.new("TextButton")
     Botao.Size = UDim2.new(1, -6, 0, 28)
@@ -131,7 +128,6 @@ local function criarBotao(texto, ordem, callback)
     return Botao
 end
 
--- Lógica de abrir/fechar
 BotaoAlternar.MouseButton1Click:Connect(function()
     menuAberto = not menuAberto
     FrameMenu.Visible = menuAberto
@@ -150,7 +146,7 @@ local listaSpam = {
     { t = "Acender",          m = "/ . Acender" },
     { t = "Tragar",           m = "/ . Tragar" },
     { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" },
-    { t = "Finalizar",        m = "/ . finalizar" } -- [ADICIONADO CONFORME PEDIDO]
+    { t = "Finalizar",        m = "/ . finalizar" }
 }
 
 for i, v in ipairs(listaSpam) do
@@ -219,19 +215,17 @@ local function darEsp(p)
     if p == LocalPlayer or not p.Character then return end
     local char = p.Character
     
-    -- Outline Vermelho estilo esqueleto pelas paredes
     if not char:FindFirstChild("MaquiavelHighlight") then
         local hl = Instance.new("Highlight")
         hl.Name = "MaquiavelHighlight"
         hl.FillColor = Color3.fromRGB(0,0,0)
-        hl.FillTransparency = 1 -- Foca apenas no traçado das linhas do corpo
+        hl.FillTransparency = 1 
         hl.OutlineColor = Color3.fromRGB(255, 0, 0)
         hl.OutlineTransparency = 0
         hl.Adornee = char
         hl.Parent = char
     end
     
-    -- Nome e Distância Fina
     local head = char:WaitForChild("Head", 2)
     if head and not head:FindFirstChild("MaquiavelBB") then
         local bb = Instance.new("BillboardGui")
@@ -278,4 +272,6 @@ BotaoEsp.MouseButton1Click:Connect(function()
         BotaoEsp.Text = "ESP: OFF"
         BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
         if conexaoEsp then conexaoEsp:Disconnect() conexaoEsp = nil end
-            
+        for _, p in ipairs(Players:GetPlayers()) do limparEsp(p) end
+    end
+end)
