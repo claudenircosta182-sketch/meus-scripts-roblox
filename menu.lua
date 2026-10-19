@@ -97,12 +97,12 @@ LabelTitulo.Font = Enum.Font.SourceSansBold
 LabelTitulo.TextSize = 16
 LabelTitulo.Parent = FrameMenu
 
--- Rolagem (Scrolling)
+-- Rolagem (Scrolling) - Canvas aumentado para comportar os novos botões de artes marciais
 local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -10, 1, -40)
 ScrollContainer.Position = UDim2.new(0, 5, 0, 35)
 ScrollContainer.BackgroundTransparency = 1
-ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 810) -- Aumentado para acomodar o novo botão sem cortar
+ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, 1400)
 ScrollContainer.ScrollBarThickness = 3
 ScrollContainer.Parent = FrameMenu
 
@@ -149,7 +149,19 @@ local listaSpam = {
     { t = "Cortar Com.",      m = "/ . Cortar communication" },
     { t = "Acender",          m = "/ . Acender" },
     { t = "Tragar",           m = "/ . Tragar" },
-    { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" }
+    { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" },
+    -- Novos adicionados:
+    { t = "Finalizar",        m = "/ . Finalizar" },
+    { t = "Joelhada 🇹🇭",      m = "/ . Joelhada — Muay Thai 🇹🇭" },
+    { t = "Direto 🇹🇭",        m = "/ . Direto — Muay Thai 🇹🇭" },
+    { t = "Chute Circ. 🇰🇷",    m = "/ . Chute circular (Dollyo Chagi) — Taekwondo 🇰🇷" },
+    { t = "Chute Lat. 🇰🇷",    m = "/ . Chute lateral (Yop Chagi) — Taekwondo 🇰🇷" },
+    { t = "Double Leg 🇧🇷",    m = "/ . Queda de duas pernas (Double Leg) — Jiu-Jitsu 🇧🇷" },
+    { t = "Desviar Rápido",   m = "/ . Desviar Rápido" },
+    { t = "Controle Costas",  m = "/ . Controle das costas — Jiu-Jitsu" },
+    { t = "Triângulo 🇧🇷",     m = "/ . Triângulo — Jiu-Jitsu 🇧🇷" },
+    { t = "Rasteira 🇨🇳",      m = "/ . Rasteira — Kung Fu 🇨🇳" },
+    { t = "Projeção 🇨🇳",      m = "/ . Projeção — Sanda 🇨🇳" }
 }
 
 for i, v in ipairs(listaSpam) do
@@ -164,7 +176,7 @@ Sep1.Text = "-- MÚLTIPLOS 3X --"
 Sep1.TextColor3 = Color3.fromRGB(0, 0, 0)
 Sep1.Font = Enum.Font.SourceSansBold
 Sep1.TextSize = 11
-Sep1.LayoutOrder = 50
+Sep1.LayoutOrder = 100
 Sep1.Parent = ScrollContainer
 
 -- [[ SPAMS 3X ]] --
@@ -175,11 +187,23 @@ local lista3x = {
     { t = "3X: Chute",            m = "/ . Chute" },
     { t = "3X: Furar pneu",       m = "/ . Furar pneu" },
     { t = "3X: Rajar Heli",       m = "/ . Rajar Helicóptero" },
-    { t = "3X: .50 DE",           m = ":/  . TIRO NA CABEÇA 🩸/ .50 DESERT EAGLE" } -- [ADICIONADO CONFORME PEDIDO]
+    { t = "3X: .50 DE",           m = ":/  . TIRO NA CABEÇA 🩸/ .50 DESERT EAGLE" },
+    -- Novos adicionados 3X:
+    { t = "3X: Finalizar",        m = "/ . Finalizar" },
+    { t = "3X: Joelhada 🇹🇭",      m = "/ . Joelhada — Muay Thai 🇹🇭" },
+    { t = "3X: Direto 🇹🇭",        m = "/ . Direto — Muay Thai 🇹🇭" },
+    { t = "3X: Chute Circ. 🇰🇷",    m = "/ . Chute circular (Dollyo Chagi) — Taekwondo 🇰🇷" },
+    { t = "3X: Chute Lat. 🇰🇷",    m = "/ . Chute lateral (Yop Chagi) — Taekwondo 🇰🇷" },
+    { t = "3X: Double Leg 🇧🇷",    m = "/ . Queda de duas pernas (Double Leg) — Jiu-Jitsu 🇧🇷" },
+    { t = "3X: Desviar Rápido",   m = "/ . Desviar Rápido" },
+    { t = "3X: Controle Costas",  m = "/ . Controle das costas — Jiu-Jitsu" },
+    { t = "3X: Triângulo 🇧🇷",     m = "/ . Triângulo — Jiu-Jitsu 🇧🇷" },
+    { t = "3X: Rasteira 🇨🇳",      m = "/ . Rasteira — Kung Fu 🇨🇳" },
+    { t = "3X: Projeção 🇨🇳",      m = "/ . Projeção — Sanda 🇨🇳" }
 }
 
 for i, v in ipairs(lista3x) do
-    criarBotao(v.t, 50 + i, function()
+    criarBotao(v.t, 100 + i, function()
         for _ = 1, 3 do
             enviarChat(v.m)
             task.wait(0.08)
@@ -195,11 +219,11 @@ Sep2.Text = "-- VISUAL --"
 Sep2.TextColor3 = Color3.fromRGB(0, 0, 0)
 Sep2.Font = Enum.Font.SourceSansBold
 Sep2.TextSize = 11
-Sep2.LayoutOrder = 100
+Sep2.LayoutOrder = 300
 Sep2.Parent = ScrollContainer
 
 -- [[ SISTEMA ESP COM HIGHLIGHT ULTRA LEVE ]] --
-local BotaoEsp = criarBotao("ESP: OFF", 101, function() end)
+local BotaoEsp = criarBotao("ESP: OFF", 301, function() end)
 BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
 
 local function limparEsp(p)
@@ -223,7 +247,7 @@ local function darEsp(p)
         local hl = Instance.new("Highlight")
         hl.Name = "MaquiavelHighlight"
         hl.FillColor = Color3.fromRGB(0,0,0)
-        hl.FillTransparency = 1 -- Foca apenas no traçado das linhas do corpo
+        hl.FillTransparency = 1 
         hl.OutlineColor = Color3.fromRGB(255, 0, 0)
         hl.OutlineTransparency = 0
         hl.Adornee = char
@@ -238,45 +262,4 @@ local function darEsp(p)
         bb.AlwaysOnTop = true
         bb.Size = UDim2.new(0, 150, 0, 40)
         bb.StudsOffset = Vector3.new(0, 2, 0)
-        bb.Adornee = head
         
-        local txt = Instance.new("TextLabel")
-        txt.Size = UDim2.new(1, 0, 1, 0)
-        txt.BackgroundTransparency = 1
-        txt.Text = p.Name .. " [Calculando...]"
-        txt.TextColor3 = Color3.fromRGB(255, 255, 255)
-        txt.Font = Enum.Font.SourceSansLight
-        txt.TextSize = 12
-        txt.Parent = bb
-        bb.Parent = head
-        
-        task.spawn(function()
-            while espAtivo and char and head and bb:IsDescendantOf(game) do
-                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and char:FindFirstChild("HumanoidRootPart") then
-                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
-                    txt.Text = string.format("%s\n[%d Metros]", p.Name, math.floor(dist))
-                end
-                task.wait(0.3)
-            end
-        end)
-    end
-end
-
-BotaoEsp.MouseButton1Click:Connect(function()
-    espAtivo = not espAtivo
-    if espAtivo then
-        BotaoEsp.Text = "ESP: ONLINE"
-        BotaoEsp.BackgroundColor3 = Color3.fromRGB(0, 140, 0)
-        for _, p in ipairs(Players:GetPlayers()) do darEsp(p) end
-        conexaoEsp = Players.PlayerAdded:Connect(function(p)
-            p.CharacterAdded:Connect(function()
-                if espAtivo then task.wait(0.5) darEsp(p) end
-            end)
-        end)
-    else
-        BotaoEsp.Text = "ESP: OFF"
-        BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-        if conexaoEsp then conexaoEsp:Disconnect() conexaoEsp = nil end
-        for _, p in ipairs(Players:GetPlayers()) do limparEsp(p) end
-    end
-end)
