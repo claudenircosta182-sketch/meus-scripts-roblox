@@ -146,7 +146,10 @@ local listaSpam = {
     { t = "Acender",          m = "/ . Acender" },
     { t = "Tragar",           m = "/ . Tragar" },
     { t = "Tiro Cabeça / PD", m = "/ . Tiro na cabeça 🩸 / PD" },
-    { t = "Finalizar",        m = "/ . finalizar" }
+    { t = "Finalizar",        m = "/ . finalizar" },
+    { t = "Sacar Faca",       m = "/ . Sacar Faça" },
+    { t = "Sacar Glock",      m = "/ . sacar Glock" },
+    { t = "Facada",           m = "/ . Facada" }
 }
 
 for i, v in ipairs(listaSpam) do
