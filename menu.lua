@@ -1,4 +1,5 @@
-[[ MENU MAQUIAVÉLICO - VERSÃO ULTRA COMPATÍVEL ]] --
+
+-- [[ MENU MAQUIAVÉLICO - VERSÃO ULTRA COMPATÍVEL ]] --
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = Players.LocalPlayer
@@ -149,11 +150,7 @@ local listaSpam = {
     { t = "Finalizar",        m = "/ . finalizar" },
     { t = "Sacar Faca",       m = "/ . Sacar Faça" },
     { t = "Sacar Glock",      m = "/ . sacar Glock" },
-    { t = "Facada",           m = "/ . Facada" },
-    { t = "Derrubar",         m = "/ . Derrubar" },
-    { t = "Pressionar",       m = "/ . Pressionar" },
-    { t = "Sacar F",          m = "/ . Sacar F" },
-    { t = "Sacar G",          m = "/ . Sacar G" }
+    { t = "Facada",           m = "/ . Facada" }
 }
 
 for i, v in ipairs(listaSpam) do
@@ -264,6 +261,7 @@ local function darEsp(p)
     end
 end
 
+-- Correção de conexão do evento para evitar falha de fechamento em executores instáveis
 BotaoEsp.MouseButton1Click:Connect(function()
     espAtivo = not espAtivo
     if espAtivo then
@@ -279,3 +277,6 @@ BotaoEsp.MouseButton1Click:Connect(function()
         BotaoEsp.Text = "ESP: OFF"
         BotaoEsp.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
         if conexaoEsp then conexaoEsp:Disconnect() conexaoEsp = nil end
+        for _, p in ipairs(Players:GetPlayers()) do limparEsp(p) end
+    end
+end)
